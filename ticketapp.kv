@@ -1,0 +1,275 @@
+#:kivy 2.3.0
+
+<TicketApp>:
+    orientation: 'vertical'
+    padding: 10
+    spacing: 10
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: 200
+
+        Label:
+            text: '1. 选择路线'
+            size_hint_y: None
+            height: 30
+            font_size: 18
+            bold: True
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 40
+            spacing: 10
+
+            Label:
+                text: '路线:'
+                size_hint_x: None
+                width: 50
+
+            Spinner:
+                id: route_spinner
+                text: '请选择路线'
+                values: []
+                size_hint_x: 1
+
+            Label:
+                text: '日期:'
+                size_hint_x: None
+                width: 50
+
+            TextInput:
+                id: date_input
+                text: ''
+                size_hint_x: None
+                width: 120
+                multiline: False
+
+            Button:
+                text: '查询'
+                size_hint_x: None
+                width: 80
+                on_press: root.query_vehicles()
+
+            Button:
+                text: '配置'
+                size_hint_x: None
+                width: 80
+                on_press: root.open_config()
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: 300
+
+        Label:
+            text: '2. 选择班次'
+            size_hint_y: None
+            height: 30
+            font_size: 18
+            bold: True
+
+        RecycleView:
+            id: vehicle_list
+            viewclass: 'VehicleItem'
+            RecycleBoxLayout:
+                default_size: None, dp(60)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: 120
+
+        Label:
+            text: '3. 抢票控制'
+            size_hint_y: None
+            height: 30
+            font_size: 18
+            bold: True
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 50
+            spacing: 10
+
+            Button:
+                id: start_button
+                text: '开始抢票'
+                size_hint_x: 1
+                disabled: True
+                on_press: root.start_booking()
+
+            Button:
+                id: stop_button
+                text: '停止'
+                size_hint_x: 1
+                disabled: True
+                on_press: root.stop_booking()
+
+        Label:
+            id: status_label
+            text: '状态: 未选择班次'
+            size_hint_y: None
+            height: 30
+            color: 0, 0, 1, 1
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        Label:
+            text: '运行日志'
+            size_hint_y: None
+            height: 30
+            font_size: 18
+            bold: True
+
+        ScrollView:
+            TextInput:
+                id: log_text
+                text: ''
+                readonly: True
+                size_hint_y: None
+                height: self.minimum_height
+                font_size: 12
+
+<VehicleItem>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(60)
+    padding: 5
+
+    Label:
+        text: f"{root.idx}. {root.time}"
+        size_hint_x: 0.3
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+
+    Label:
+        text: f"学生价: {root.student_price}"
+        size_hint_x: 0.2
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+
+    Label:
+        text: f"教师价: {root.teacher_price}"
+        size_hint_x: 0.2
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+
+    Label:
+        text: f"座位: {root.seats}"
+        size_hint_x: 0.2
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+
+    Button:
+        text: '选择'
+        size_hint_x: 0.1
+        on_press: root.select_vehicle()
+
+<ConfigScreen>:
+    orientation: 'vertical'
+    padding: 10
+    spacing: 10
+
+    Label:
+        text: '配置设置'
+        size_hint_y: None
+        height: 50
+        font_size: 24
+        bold: True
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 10
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 40
+
+            Label:
+                text: 'API_KEY:'
+                size_hint_x: None
+                width: 100
+
+            TextInput:
+                id: api_key_input
+                text: ''
+                size_hint_x: 1
+                multiline: False
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 40
+
+            Label:
+                text: 'USER_ID:'
+                size_hint_x: None
+                width: 100
+
+            TextInput:
+                id: user_id_input
+                text: ''
+                size_hint_x: 1
+                multiline: False
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: 80
+
+            Label:
+                text: 'COOKIE_STR:'
+                size_hint_y: None
+                height: 20
+
+            TextInput:
+                id: cookie_input
+                text: ''
+                size_hint_y: None
+                height: 60
+                multiline: True
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 40
+
+            Label:
+                text: 'XSRF_TOKEN:'
+                size_hint_x: None
+                width: 100
+
+            TextInput:
+                id: xsrf_input
+                text: ''
+                size_hint_x: 1
+                multiline: False
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: 50
+        spacing: 10
+
+        Button:
+            text: '保存配置'
+            size_hint_x: 1
+            on_press: root.save_config()
+
+        Button:
+            text: '返回'
+            size_hint_x: 1
+            on_press: root.dismiss()
